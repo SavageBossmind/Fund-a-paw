@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fund-a-Paw: Community-Driven Animal Welfare</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/fund-a-paw/css/styles.css">
+
+    <script>window.FAP = window.FAP || {};</script>
+   <script src="/static/fund-a-paw/js/data.js" defer></script>
+   <script src="/static/fund-a-paw/js/nav.js" defer></script>
+   <script src="/static/fund-a-paw/js/footer.js" defer></script>
+   <script src="/static/fund-a-paw/js/app.js" defer></script>
+    <style>
+/* --- Fund-a-Paw nav (scoped) --- */
+.fap-nav{ position:sticky; top:0; z-index:50; background:rgba(255,255,255,.95); backdrop-filter:saturate(180%) blur(6px); border-bottom:1px solid #e5e7eb; }
+.fap-nav__inner{ max-width:1200px; margin:0 auto; padding: .6rem 1rem; display:flex; align-items:center; justify-content:flex-end; gap:1rem; }
+.fap-brand{ margin-right:auto; font-weight:800; color:#1f2937; text-decoration:none; }
+.fap-menu{ display:flex; align-items:center; gap:.75rem; }
+.fap-menu__link{ text-decoration:none; color:#374151; font-weight:600; padding:.4rem .6rem; border-radius:.5rem; }
+.fap-menu__link:hover{ background:#f3f4f6; }
+.fap-menu__cta{ text-decoration:none; color:#fff; font-weight:700; padding:.45rem .8rem; border-radius:.6rem; background:#2563eb; }
+.fap-menu__group{ position:relative; }
+.fap-menu__dropdown-btn{ background:transparent; border:0; font-weight:700; color:#374151; display:flex; align-items:center; gap:.35rem; cursor:pointer; padding:.4rem .6rem; border-radius:.5rem; }
+.fap-menu__dropdown-btn:hover{ background:#f3f4f6; }
+.fap-dropdown{ position:absolute; right:0; top:calc(100% + .4rem); background:#fff; border:1px solid #e5e7eb; border-radius:.7rem; box-shadow:0 10px 30px rgba(0,0,0,.08); padding:.3rem; min-width:220px; display:none; }
+.fap-dropdown__item{ display:block; padding:.6rem .75rem; font-weight:600; color:#374151; text-decoration:none; border-radius:.5rem; }
+.fap-dropdown__item:hover{ background:#f9fafb; }
+.fap-burger{ display:none; background:transparent; border:1px solid #e5e7eb; border-radius:.5rem; padding:.4rem .5rem; }
+.fap-burger span{ display:block; width:22px; height:2px; background:#111827; margin:4px 0; }
+.fap-mobile{ display:none; border-top:1px solid #e5e7eb; background:#fff; }
+.fap-mobile a, .fap-mobile summary{ display:block; padding:.8rem 1rem; text-decoration:none; color:#374151; }
+.fap-mobile details{ border-bottom:1px solid #f3f4f6; }
+@media (max-width: 860px){
+  .fap-menu{ display:none; }
+  .fap-burger{ display:block; }
+  .fap-nav__inner{ justify-content:space-between; }
+}
+.fap-nav .show .fap-dropdown{ display:block; }
+.fap-mobile.open{ display:block; }
+</style>
+<style>
+/* Hover-to-open submenu for desktop */
+.fap-menu__group:hover .fap-dropdown{display:block}
+
+/* Hero image height */
+.hero__img{height:46vh}
+@media (min-width:768px){.hero__img{height:60vh}}
+
+/* Partners carousel */
+.partners{padding:2rem 1rem;margin-top:2rem;background:#fff}
+.partners__title{font-weight:800;color:#111827;margin:0 0 1rem 0;text-align:center}
+.partners__viewport{overflow:hidden;position:relative}
+.partners__track{display:flex;gap:24px;align-items:center;will-change:transform}
+.partner{display:flex;align-items:center;justify-content:center;min-width:160px;min-height:72px;padding:10px 16px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
+.partner img{max-height:42px;max-width:140px;object-fit:contain}
+@media (max-width:640px){.partner{min-width:130px;min-height:60px}.partner img{max-height:36px;max-width:120px}}
+
+/* Smaller buttons + denser cards in urgent sections only */
+#urgent-shelter-needs-section .btn-primary,
+#urgent-needs-section .btn-primary,
+#filtered-animal-grid .btn-primary{
+  padding:.35rem .55rem !important;
+  font-size:.85rem !important;
+  line-height:1.1 !important;
+  border-radius:.45rem !important;
+}
+#urgent-shelter-needs-section .p-6,
+#urgent-needs-section .p-6{ padding:.9rem !important; }
+#urgent-needs-section img.w-full{ height:210px !important; }
+#urgent-shelter-needs-section img.w-full{ height:180px !important; }
+
+/* Keep anchor scrolling visible under sticky nav */
+body{scroll-padding-top:64px}
+</style>
+</head>
+
+   <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f7fafc;
+      }
+      .container {
+        max-width: 1200px;
+      }
+      .form-input {
+        transition: all 0.3s ease-in-out;
+        border-color: #e2e8f0;
+        border-width: 1px;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        width: 100%;
+      }
+      .form-input:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+        border-color: #4299e1;
+      }
+      .btn-primary {
+        transition: all 0.3s ease-in-out;
+        background-color: #4299e1;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+      }
+      .btn-primary:hover {
+        background-color: #2b6cb0;
+        transform: translateY(-2px);
+      }
+      .filter-btn {
+        background-color: #e2e8f0;
+        color: #4a5568;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease-in-out;
+      }
+      .filter-btn.active {
+        background-color: #4299e1;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+
+
+  <body class="bg-gray-50 text-gray-800">
+
+
+<header id="site-nav">
+  <div class="fap-nav__inner">
+    <a class="fap-brand" href="/templates/fund-a-paw/index.html">Fund-a-Paw</a>
+    <nav class="fap-menu" aria-label="Primary">
+      <div class="fap-menu__group">
+        <button class="fap-menu__link fap-menu__dropdown-btn" aria-haspopup="true" aria-expanded="false">
+          Shelters
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 20 20"><path d="M5.5 7.5l4.5 5 4.5-5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+        <div class="fap-dropdown" role="menu">
+          <a class="fap-dropdown__item" /templates/fund-a-paw/shelters.html#urgent-shelter role="menuitem">Urgent shelter needs</a>
+          <a class="fap-dropdown__item" /templates/fund-a-paw/animals.html#urgent role="menuitem">Urgent animal needs</a>
+        </div>
+      </div>
+      <a class="fap-menu__link" href="#partners">Our Partners</a>
+      <a class="fap-menu__link" href="/templates/fund-a-paw/contact.html">Contact</a>
+      <a class="fap-menu__link" href="/templates/fund-a-paw/about.html">About Us</a>
+      <a class="fap-menu__cta" id="link-signup" href="/templates/fund-a-paw/signup.html">Sign up</a>
+      <button class="fap-menu__link" id="btn-logout" type="button">Log out</button>
+    </nav>
+    <button class="fap-burger" aria-label="Open menu" aria-controls="fap-mobile" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <nav id="fap-mobile" class="fap-mobile" aria-label="Mobile">
+    <details>
+      <summary>Shelters</summary>
+      <a class="fap-dropdown__item" href="/templates/fund-a-paw/shelters.html#urgent-shelter" role="menuitem">Urgent shelter needs</a>
+<a class="fap-dropdown__item" href="/templates/fund-a-paw/animals.html#urgent" role="menuitem">Urgent animal needs</a>
+    </details>
+    <a href="#partners">Our Partners</a>
+    <a href="/templates/fund-a-paw/contact.html">Contact</a>
+    <a href="/templates/fund-a-paw/about.html">About Us</a>
+    <a href="/templates/fund-a-paw/signup.html" class="fap-menu__cta" id="link-signup-mobile">Sign up</a>
+    <button id="btn-logout-mobile" type="button">Log out</button>
+  </nav>
+</header>
+
+    <!-- Hero Section -->
+<header class="relative text-white">
+  <img src="/static/fund-a-paw/img/hero.jpg" alt="Fund-a-Paw – supporting Alberta shelters" class="absolute inset-0 w-full h-full object-cover hero__img"/>
+  <div class="absolute inset-0 bg-gradient-to-r from-blue-500/70 to-purple-500/60"></div>
+  <div class="relative py-20 px-4">
+
+      <div class="container mx-auto text-center">
+        <h1 class="text-4xl sm:text-5xl font-bold mb-4 tracking-tight">
+          Fund-a-Paw
+        </h1>
+        <p class="text-lg sm:text-xl font-light mb-8 max-w-2xl mx-auto">
+          Connecting caring people with animal shelters for transparent and
+          direct support.
+        </p>
+        <button
+          onclick="showSection('shelters-list')"
+          class="btn-primary inline-block"
+        >
+          Find a Shelter to Support
+        </button>
+      </div>
+    
+  </div>
+</header>
+
+    <!-- Main Content Area - This is where different "pages" will be shown -->
+    <main class="py-20 px-4">
+      <!-- Shelters List Section -->
+      <section id="shelters-list" class="container mx-auto">
+        <!-- Urgent Shelter Needs Section -->
+        <div id="urgent-shelter-needs-section" class="mb-12">
+          <!-- Urgent shelter needs will be rendered here by JavaScript -->
+        </div>
+
+        <!-- Urgent Animal Needs Section -->
+        <div id="urgent-needs-section" class="mb-12">
+          <!-- Urgent animals will be rendered here by JavaScript -->
+        </div>
+
+        <h2 class="text-3xl font-bold text-center mb-12">
+          Our Partner Shelters
+        </h2>
+        <div
+          id="shelter-grid"
+          class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          <!-- Shelter cards will be generated here by JavaScript -->
+        </div>
+      </section>
+
+      <!-- Shelter Details Page (hidden by default) -->
+      <section id="shelter-details" class="container mx-auto hidden">
+        <button
+          onclick="showSection('shelters-list')"
+          class="mb-8 flex items-center text-gray-600 hover:text-blue-500 transition-colors duration-200"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Back to all shelters
+        </button>
+        <div
+          id="shelter-detail-content"
+          class="bg-white p-8 rounded-xl shadow-lg"
+        >
+          <!-- Detailed content will be dynamically loaded here -->
+        </div>
+      </section>
+
+      <!-- Animal Detail Page (hidden by default) -->
+      <section id="animal-details" class="container mx-auto hidden">
+        <button
+          onclick="showShelterFromAnimal()"
+          class="mb-8 flex items-center text-gray-600 hover:text-blue-500 transition-colors duration-200"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Back to shelter
+        </button>
+        <div
+          id="animal-detail-content"
+          class="bg-white p-8 rounded-xl shadow-lg"
+        >
+          <!-- Detailed content will be dynamically loaded here -->
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <!-- Partners Carousel (bottom of home) -->
+    <section id="partners" class="partners" aria-label="Our Partners">
+  <div class="partners__head">
+    <h2 class="partners__title">Our Partners</h2>
+    <p class="partners__subtitle">Shelters across Alberta we collaborate with</p>
+  </div>
+
+  <div class="partners__carousel" id="partners-carousel">
+    <button class="partners__control partners__control--prev" id="partners-prev" aria-label="Previous partners" type="button">‹</button>
+    <div class="partners__viewport" id="partners-viewport">
+      <ul class="partners__track" id="partners-track" role="list"></ul>
+    </div>
+    <button class="partners__control partners__control--next" id="partners-next" aria-label="Next partners" type="button">›</button>
+  </div>
+</section>
+
+
+<!-- ===== Demo carousel (place below "Our Partners") ===== -->
+<section id="partners-demo" class="fapdemo" aria-labelledby="partners-demo-title">
+  <h3 id="partners-demo-title" class="fapdemo__title">Demo Carousel</h3>
+
+  <div class="fapdemo__carousel" data-autoplay="5000" tabindex="0">
+    <button class="fapdemo__control fapdemo__control--prev" aria-label="Previous">‹</button>
+
+    <div class="fapdemo__viewport">
+      <ul class="fapdemo__track" role="list">
+        <!-- Exactly 5 demo items -->
+        <li class="fapdemo__slide">
+          <article class="fapdemo__card">
+            <img src="https://placehold.co/600x360/2563eb/ffffff?text=Partner+1" alt="Partner 1 logo" class="fapdemo__img">
+            <h4 class="fapdemo__name">Partner 1</h4>
+            <p class="fapdemo__desc">Short description for Partner 1.</p>
+          </article>
+        </li>
+        <li class="fapdemo__slide">
+          <article class="fapdemo__card">
+            <img src="https://placehold.co/600x360/7c3aed/ffffff?text=Partner+2" alt="Partner 2 logo" class="fapdemo__img">
+            <h4 class="fapdemo__name">Partner 2</h4>
+            <p class="fapdemo__desc">Short description for Partner 2.</p>
+          </article>
+        </li>
+        <li class="fapdemo__slide">
+          <article class="fapdemo__card">
+            <img src="https://placehold.co/600x360/10b981/ffffff?text=Partner+3" alt="Partner 3 logo" class="fapdemo__img">
+            <h4 class="fapdemo__name">Partner 3</h4>
+            <p class="fapdemo__desc">Short description for Partner 3.</p>
+          </article>
+        </li>
+        <li class="fapdemo__slide">
+          <article class="fapdemo__card">
+            <img src="https://placehold.co/600x360/f59e0b/ffffff?text=Partner+4" alt="Partner 4 logo" class="fapdemo__img">
+            <h4 class="fapdemo__name">Partner 4</h4>
+            <p class="fapdemo__desc">Short description for Partner 4.</p>
+          </article>
+        </li>
+        <li class="fapdemo__slide">
+          <article class="fapdemo__card">
+            <img src="https://placehold.co/600x360/ef4444/ffffff?text=Partner+5" alt="Partner 5 logo" class="fapdemo__img">
+            <h4 class="fapdemo__name">Partner 5</h4>
+            <p class="fapdemo__desc">Short description for Partner 5.</p>
+          </article>
+        </li>
+      </ul>
+    </div>
+
+    <button class="fapdemo__control fapdemo__control--next" aria-label="Next">›</button>
+  </div>
+</section>
+
+<style>
+/* ====== Scoped styles: fapdemo* only ====== */
+.fapdemo{padding:1rem 0;margin-top:1rem}
+.fapdemo__title{margin:0 0 .5rem 0;font-weight:800;color:#111827}
+.fapdemo__carousel{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:auto 1fr auto;gap:.5rem;align-items:center}
+.fapdemo__viewport{overflow:hidden;position:relative}
+.fapdemo__track{display:flex;transition:transform .5s ease;will-change:transform}
+.fapdemo__slide{padding:.5rem;flex:0 0 33.3333%} /* 3-up */
+.fapdemo__card{height:100%;background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 4px 10px rgba(0,0,0,.04);padding:.75rem;display:flex;flex-direction:column}
+.fapdemo__img{width:100%;height:140px;object-fit:cover;border-radius:10px}
+.fapdemo__name{margin:.5rem 0 .25rem 0;font-weight:700}
+.fapdemo__desc{margin:0;color:#6b7280;font-size:.95rem;line-height:1.35}
+.fapdemo__control{border:1px solid #e5e7eb;background:#fff;height:40px;width:40px;border-radius:9999px;display:grid;place-items:center;font-size:22px;cursor:pointer;transition:transform .12s}
+.fapdemo__control:hover{transform:scale(1.05)}
+@media (max-width:1024px){ .fapdemo__slide{flex-basis:50%} }   /* 2-up */
+@media (max-width:640px){  .fapdemo__slide{flex-basis:100%} }  /* 1-up */
+</style>
+
+
+    
+<footer class="bg-gray-800 text-white py-10 px-4 mt-12">
+      <div class="container mx-auto text-center">
+        <p class="text-sm">&copy; 2025 Fund-a-Paw. All rights reserved.</p>
+        <div class="mt-4">
+          <a href="#" class="text-gray-400 hover:text-white mx-2">Twitter</a>
+          <span class="text-gray-500">|</span>
+          <a href="#" class="text-gray-400 hover:text-white mx-2">Instagram</a>
+          <span class="text-gray-500">|</span>
+          <a href="#" class="text-gray-400 hover:text-white mx-2">LinkedIn</a>
+        </div>
+      </div>
+    </footer>
+
+    
+  
+
+</body>
+</html>

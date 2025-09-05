@@ -1,0 +1,67 @@
+
+:root { --brand: #2563eb; --brand-2: #7c3aed; }
+* { box-sizing: border-box; }
+body { font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; }
+.container { max-width: 1200px; }
+.form-input { transition: all .2s; border: 1px solid #e2e8f0; border-radius: .5rem; padding: .7rem 1rem; width: 100%; }
+.form-input:focus { outline: none; box-shadow: 0 0 0 3px rgba(37,99,235,.25); border-color: var(--brand); }
+.btn-primary { background: var(--brand); color: white; padding: .7rem 1.2rem; border-radius: .6rem; font-weight: 700; }
+.btn-primary:hover { filter: brightness(.95); transform: translateY(-1px); }
+.btn-secondary { background: white; color: #111827; padding: .7rem 1.2rem; border-radius: .6rem; font-weight: 700; border: 2px solid rgba(255,255,255,.8); }
+.btn-ghost { color: white; padding: .7rem 1.2rem; border-radius: .6rem; font-weight: 700; border: 2px solid rgba(255,255,255,.3); }
+.tab { padding: .4rem .8rem; border-radius: .5rem; font-weight: 600; }
+.tab.active { background: #e2e8f0; }
+.tab-panel.hidden { display: none; }
+.card { background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,.07); }
+.card:hover { transform: translateY(-2px); }
+/* === NAV (top-right) === */
+.fap-nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-bottom:1px solid #e5e7eb}
+.fap-nav__inner{max-width:1200px;margin:0 auto;padding:.6rem 1rem;display:flex;align-items:center;gap:1rem}
+.fap-brand{margin-right:auto;font-weight:800;color:#1f2937;text-decoration:none}
+.fap-menu__list{display:flex;align-items:center;gap:.6rem;list-style:none;margin:0;padding:0}
+.fap-link{display:inline-block;padding:.45rem .6rem;border-radius:.5rem;color:#374151;text-decoration:none;font-weight:600}
+.fap-link:hover{background:#f3f4f6}
+.has-submenu{position:relative}
+.submenu{position:absolute;right:0;top:calc(100% + .4rem);min-width:220px;background:#fff;border:1px solid #e5e7eb;border-radius:.7rem;box-shadow:0 10px 30px rgba(0,0,0,.08);padding:.35rem;display:none}
+.has-submenu:hover .submenu{display:block}
+.submenu a{display:block;padding:.55rem .75rem;border-radius:.5rem;color:#374151;text-decoration:none;font-weight:600}
+.submenu a:hover{background:#f9fafb}
+.fap-auth{margin-left:.25rem}
+.fap-btn{display:inline-block;border-radius:.6rem;font-weight:700;text-decoration:none;cursor:pointer}
+.fap-btn--primary{background:#2563eb;color:#fff;padding:.45rem .8rem}
+.fap-btn--block{display:block;width:100%;text-align:center}
+.fap-burger{display:none;border:1px solid #e5e7eb;border-radius:.5rem;padding:.35rem .5rem;background:#fff}
+.fap-burger span{display:block;width:22px;height:2px;background:#111827;margin:4px 0}
+.fap-mobile{display:none;border-top:1px solid #e5e7eb;background:#fff}
+.fap-mobile.open{display:block}
+.fap-mobile a,.fap-mobile summary{display:block;padding:.8rem 1rem;text-decoration:none;color:#374151}
+.fap-mobile details{border-bottom:1px solid #f3f4f6}
+
+@media (max-width:860px){.fap-menu{display:none}.fap-burger{display:block}}
+/* Ensure content isn’t hidden by sticky nav (tweak if your header height differs) */
+body{scroll-padding-top:64px}
+.hero{position:relative;overflow:hidden}
+.hero__img{width:100%;height:46vh;object-fit:cover}
+@media (min-width:768px){.hero__img{height:60vh}}
+.hero__overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(37,99,235,.75),rgba(124,58,237,.55))}
+.partners{padding:2rem 1rem;margin-top:2rem;background:#ffffff}
+.partners__title{font-weight:800;color:#111827;margin:0 0 1rem 0;text-align:center}
+.partners__viewport{overflow:hidden;position:relative}
+.partners__track{display:flex;gap:24px;align-items:center;will-change:transform}
+.partner{display:flex;align-items:center;justify-content:center;min-width:160px;min-height:72px;padding:10px 16px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
+.partner img{max-height:42px;max-width:140px;object-fit:contain}
+
+/* Smaller button utility  */
+.btn--sm, .fap-btn--sm { padding:.35rem .6rem; font-size:.875rem; border-radius:.5rem }
+
+/* Auto-apply smaller size to buttons in urgent needs areas */
+#urgent-shelter-needs-section .btn,
+#filtered-animal-grid .btn,
+#urgent-shelter-needs-section button,
+#filtered-animal-grid button,
+#urgent-shelter-needs-section a.fap-btn,
+#filtered-animal-grid a.fap-btn {
+  padding:.35rem .6rem !important;
+  font-size:.875rem !important;
+  border-radius:.5rem !important;
+}
