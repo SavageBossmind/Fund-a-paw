@@ -407,42 +407,72 @@ FAP.initNavInteractions = () => {
   }
 };
 
+// Bigger, image-first partners carousel with captions
 FAP.initPartnersCarousel = () => {
-  const track = document.getElementById('partners-track');
-  if(!track || track.dataset.enhanced) return;
+  const viewport = document.getElementById('partners-viewport');
+  const track    = document.getElementById('partners-track');
+  const btnPrev  = document.getElementById('partners-prev');
+  const btnNext  = document.getElementById('partners-next');
+
+  if (!viewport || !track || track.dataset.enhanced) return;
   track.dataset.enhanced = '1';
 
-  // Build items from shelters→partners if needed
-  if(!track.children.length && (FAP.partners||[]).length){
-    (FAP.partners).forEach(s => {
-      const a = document.createElement('a');
-      a.className = 'partner';
-      a.href = 'partners.html';
-      a.title = s.name;
-      const img = document.createElement('img');
-      img.alt = s.name;
-      img.src = s.image;
-      a.appendChild(img);
-      track.appendChild(a);
-    });
-  }
+  // Resolve path to partners page no matter where we are
+  const inTemplates = /\/templates\/fund-a-paw\//.test(location.pathname);
+  const prefix = inTemplates ? '../../' : './';
+  const partnersHref = prefix + 'templates/fund-a-paw/partners.html';
 
-  // Duplicate nodes to create seamless loop
-  const items = Array.from(track.children);
-  items.forEach(n => track.appendChild(n.cloneNode(true)));
+  // Build items from FAP.partners (fallback to shelters)
+  const data = (FAP.partners && FAP.partners.length) ? FAP.partners : (FAP.shelters || []);
+  track.innerHTML = data.map(s => `
+    <li class="partner">
+      <a class="partner__card" href="${partnersHref}#${s.id}" title="${s.name}">
+        <img src="${s.image}" loading="lazy" alt="${s.name}"
+             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e5e7eb/666?text=${encodeURIComponent(s.name)}';" />
+        <span class="partner__name">${s.name}</span>
+      </a>
+    </li>
+  `).join('');
 
-  let x = 0, speed = 0.35;
-  (function step(){
-    x -= speed;
-    const first = track.children[0];
-    if(first){
-      const w = first.getBoundingClientRect().width + 24;
-      if(Math.abs(x) >= w){ track.appendChild(first); x += w; }
+  // Duplicate for infinite loop
+  const clones = track.innerHTML;
+  track.insertAdjacentHTML('beforeend', clones);
+
+  // Basic slider: show 3 at a time, slide one card at a time
+  let index = 0;
+  const item = () => track.querySelector('.partner');
+  const itemW = () => (item()?.getBoundingClientRect().width || 320) + 24; // width + gap
+  const maxIndex = () => Math.max(0, track.children.length / 2 - 3); // only real items count
+
+  const go = (delta) => {
+    index += delta;
+    if (index < 0) {
+      index = maxIndex();
+      track.style.transition = 'none';
+      track.style.transform = `translateX(-${itemW() * index}px)`;
+      requestAnimationFrame(() => {
+        // snap then animate back one step
+        track.style.transition = '';
+        index -= 1;
+        track.style.transform = `translateX(-${itemW() * index}px)`;
+      });
+      return;
     }
-    track.style.transform = `translate3d(${x}px,0,0)`;
-    requestAnimationFrame(step);
-  })();
+    if (index > maxIndex()) index = 0;
+    track.style.transform = `translateX(-${itemW() * index}px)`;
+  };
+
+  btnPrev?.addEventListener('click', () => go(-1));
+  btnNext?.addEventListener('click', () => go(+1));
+
+  // Autoplay every 5s
+  let timer = setInterval(() => go(+1), 5000);
+  [viewport, btnPrev, btnNext].forEach(el =>
+    el?.addEventListener('mouseenter', () => clearInterval(timer)));
+  [viewport, btnPrev, btnNext].forEach(el =>
+    el?.addEventListener('mouseleave', () => timer = setInterval(() => go(+1), 5000)));
 };
+
 
 // ---------- Auto-run when DOM is ready ----------
 document.addEventListener('DOMContentLoaded', () => {
@@ -472,3 +502,73 @@ document.addEventListener('DOMContentLoaded', () => {
     sub.reset();
   });
 });
+
+
+// ===== Impact strip =====
+FAP.renderImpact = () => {
+  const shelters = (FAP.shelters || []);
+  const animals  = shelters.flatMap(s => s.animals || []);
+  const nShelters = shelters.length || 53;        // fallback if empty
+  const nAnimals  = animals.length  || 1842;      // fallback if empty
+  const raised    = 210_000;                      // TODO: wire to real totals when available
+
+  const elS = document.getElementById('impact-shelters');
+  const elA = document.getElementById('impact-animals');
+  const elR = document.getElementById('impact-raised');
+  if (elS) elS.textContent = nShelters.toLocaleString();
+  if (elA) elA.textContent = nAnimals.toLocaleString();
+  if (elR) elR.textContent = `$${raised.toLocaleString()}`;
+};
+
+// ===== Featured urgent appeal (Buddy 67% default) =====
+FAP.renderFeaturedUrgent = () => {
+  const root = document.getElementById('featured-card');
+  if (!root) return;
+
+  const shelters = FAP.shelters || [];
+  const animals  = shelters.flatMap(s => (s.animals || []).map(a => ({...a, shelter: s})));
+  // Prefer 'buddy' → else any urgent → else first animal
+  let a = animals.find(x => x.id === 'buddy') || animals.find(x => x.urgent) || animals[0];
+  if (!a) { root.innerHTML = '<p>No appeals to show right now.</p>'; return; }
+
+  // derive progress: fundedPct (0..1) OR raised/goal OR default .67
+  let pct = typeof a.fundedPct === 'number' ? a.fundedPct
+          : (a.raised && a.goal) ? (a.raised / a.goal)
+          : 0.67;
+  pct = Math.max(0, Math.min(1, pct));
+
+  const inTemplates = /\/templates\/fund-a-paw\//.test(location.pathname);
+  const prefix = inTemplates ? '../../' : './';
+  const donateHref = `${prefix}templates/fund-a-paw/donate.html?animal=${encodeURIComponent(a.id)}&shelter=${encodeURIComponent(a.shelter.id)}`;
+
+  root.innerHTML = `
+    <article class="featured">
+      <img src="${a.image}" alt="${a.name} from ${a.shelter.name}" loading="lazy" class="featured__img"
+           onerror="this.onerror=null;this.src='https://placehold.co/1000x560/e5e7eb/666?text=${encodeURIComponent(a.name)}';" />
+      <div class="featured__body">
+        <h3 class="featured__title">${a.name} — surgery fund</h3>
+        <p class="featured__text">${a.bio || 'This animal needs urgent care. Your gift helps immediately.'}</p>
+        <div class="featured__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct*100)}">
+          <span class="featured__fill" style="width:${(pct*100).toFixed(0)}%"></span>
+        </div>
+        <div class="featured__pct">${(pct*100).toFixed(0)}% funded</div>
+        <a class="btn btn-primary mt-3 inline-block" href="${donateHref}">Donate to help ${a.name}</a>
+      </div>
+    </article>
+  `;
+};
+
+// ===== Simple newsletter capture (footer) =====
+FAP.initNewsletter = () => {
+  const form = document.getElementById('newsletter-form');
+  const msg  = document.getElementById('newsletter-msg');
+  if (!form) return;
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = new FormData(form).get('email');
+    console.log('Newsletter subscribe:', email);
+    form.reset();
+    msg?.classList.remove('hidden');
+  });
+};
+
