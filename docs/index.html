@@ -41,22 +41,10 @@
   </header>
 
   <!-- Impact strip -->
-<section id="impact" class="impact container mx-auto -mt-8 mb-12 px-4">
-  <div class="impact__grid">
-    <div class="impact__item">
-      <div class="impact__num" id="impact-shelters">–</div>
-      <div class="impact__label">shelters</div>
-    </div>
-    <div class="impact__item">
-      <div class="impact__num" id="impact-animals">–</div>
-      <div class="impact__label">animals helped</div>
-    </div>
-    <div class="impact__item">
-      <div class="impact__num" id="impact-raised">–</div>
-      <div class="impact__label">raised</div>
-    </div>
-  </div>
+<section class="impact-strip">
+  <div class="container" id="impact-strip"></div>
 </section>
+
 
 <!-- How it works -->
 <section id="how-it-works" class="container mx-auto px-4 mb-16">
@@ -89,31 +77,24 @@
 
   <main class="py-20 px-4">
     <!-- ===== Shelters list ===== -->
-    <section id="shelters-list" class="container mx-auto">
-      <div id="urgent-shelter-needs-section" class="mb-12"></div>
-      <div id="urgent-needs-section" class="mb-12"></div>
+  <!-- Urgent Shelter & Animal Needs -->
+<section class="urgent2" id="urgent2">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="text-2xl font-extrabold">Urgent Shelter & Animal Needs</h2>
+      <div class="flex items-center gap-2">
+        <a class="btn btn-outline btn-sm" href="./templates/fund-a-paw/shelters.html#urgent-shelter">Shelter needs</a>
+        <a class="btn btn-primary btn-sm" href="./templates/fund-a-paw/animals.html#urgent">Animal needs</a>
+      </div>
+    </div>
+    <p class="text-slate-600 mb-3">Quick, high-impact opportunities to help today.</p>
 
-      <h2 class="text-3xl font-bold text-center mb-12">Our Partner Shelters</h2>
-      <div id="shelter-grid" class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-    </section>
+    <!-- Cards are injected by app.js -->
+    <div class="urgent2__grid" aria-live="polite"></div>
+  </div>
+</section>
 
-    <!-- ===== Shelter details (SPA on the homepage) ===== -->
-    <section id="shelter-details" class="container mx-auto hidden">
-      <button class="mb-8 flex items-center text-gray-600 hover:text-blue-500"
-              onclick="FAP.showSection('shelters-list')">
-        ← Back to all shelters
-      </button>
-      <div id="shelter-detail-content" class="bg-white p-8 rounded-xl shadow-lg"></div>
-    </section>
 
-    <!-- ===== Animal details (SPA on the homepage) ===== -->
-    <section id="animal-details" class="container mx-auto hidden">
-      <button class="mb-8 flex items-center text-gray-600 hover:text-blue-500"
-              onclick="FAP.showShelterFromAnimal()">
-        ← Back to shelter
-      </button>
-      <div id="animal-detail-content" class="bg-white p-8 rounded-xl shadow-lg"></div>
-    </section>
   </main>
 
   <section id="testimonials" class="container mx-auto px-4 mb-16">

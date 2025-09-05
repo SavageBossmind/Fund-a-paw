@@ -15,21 +15,139 @@
 <body class="bg-gray-50 text-gray-900">
   <header id="site-nav"></header>
 
-  <main class="container mx-auto px-4 py-10 prose max-w-none">
-    <h1>About Fund-a-Paw</h1>
-    <h2>Vision</h2>
-    <p>To foster a future where every animal in Alberta’s shelters receives the support they need…</p>
-    <h2>Mission</h2>
-    <p>We provide transparent, real-time donation opportunities for animal shelters…</p>
-    <h2>Core Values</h2>
-    <ul>
-      <li><strong>Transparency</strong> — donors see direct impact.</li>
-      <li><strong>Impact</strong> — measurable positive change.</li>
-      <li><strong>Innovation</strong> — effective technology.</li>
-      <li><strong>Community</strong> — connect shelters, donors, advocates.</li>
-    </ul>
-  </main>
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 hero__overlay"></div>
+    <div class="container relative py-14">
+      <h1 class="text-white text-4xl sm:text-5xl font-extrabold tracking-tight">About Fund-a-Paw</h1>
+      <p class="text-white/90 mt-3 max-w-2xl">
+        We connect caring donors with shelters across Alberta—so every gift solves a real, current need.
+      </p>
+      <div class="mt-5 flex gap-2">
+        <a class="btn btn-primary" href="../../templates/fund-a-paw/donate.html">Donate now</a>
+        <a class="btn btn-ghost" href="../../templates/fund-a-paw/shelters.html#all">Find a shelter</a>
+      </div>
+    </div>
+    <!-- Optional hero image under the gradient; replace src if you have one -->
+    <img src="../../static/fund-a-paw/img/hero.webp" alt=""
+         class="absolute inset-0 w-full h-full object-cover" loading="eager" decoding="async">
+  </section>
+
+  <!-- Vision / Mission -->
+  <section class="container py-12">
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="card p-6">
+        <h2 class="text-xl font-extrabold mb-2">Our Vision</h2>
+        <p>To foster a future where every animal in Alberta’s shelters receives the support they need, empowered by a community of informal and engaged donors.</p>
+      </div>
+      <div class="card p-6">
+        <h2 class="text-xl font-extrabold mb-2">Our Mission</h2>
+        <p>We develop and maintain a user-friendly app that provides transparent, real-time donation opportunities for shelters—connecting specific needs with dedicated individuals to enhance animal welfare across Alberta.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Values -->
+  <section class="container py-4">
+    <h2 class="text-2xl font-extrabold mb-4">Our Core Values</h2>
+    <div class="grid md:grid-cols-4 gap-6">
+      <article class="card p-6">
+        <h3 class="font-bold">Transparency</h3>
+        <p class="text-slate-600 mt-1">Shelters clearly list needs; donors see impact.</p>
+      </article>
+      <article class="card p-6">
+        <h3 class="font-bold">Impact</h3>
+        <p class="text-slate-600 mt-1">We prioritize measurable outcomes for animals.</p>
+      </article>
+      <article class="card p-6">
+        <h3 class="font-bold">Innovation</h3>
+        <p class="text-slate-600 mt-1">Modern tech for faster, more effective support.</p>
+      </article>
+      <article class="card p-6">
+        <h3 class="font-bold">Community</h3>
+        <p class="text-slate-600 mt-1">Stronger connections between shelters & donors.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="container py-10">
+    <h2 class="text-2xl font-extrabold mb-4">How it works</h2>
+    <div class="hiw">
+      <div class="hiw__card">
+        <div class="hiw__icon">🔎</div>
+        <div class="hiw__title">Choose a need</div>
+        <div class="hiw__text">Browse shelter or animal needs verified by our partners.</div>
+      </div>
+      <div class="hiw__card">
+        <div class="hiw__icon">💳</div>
+        <div class="hiw__title">Donate securely</div>
+        <div class="hiw__text">Card payments are processed by Stripe (PCI DSS Level 1).</div>
+      </div>
+      <div class="hiw__card">
+        <div class="hiw__icon">📬</div>
+        <div class="hiw__title">Get updates</div>
+        <div class="hiw__text">Receive progress emails so you can see the difference you made.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact counters -->
+  <section class="container py-6">
+    <div class="impact__grid">
+      <div class="impact__item">
+        <div class="impact__num" id="about-shelter-count">5</div>
+        <div class="impact__label">Shelters</div>
+      </div>
+      <div class="impact__item">
+        <div class="impact__num" id="about-animals-helped">1,842</div>
+        <div class="impact__label">Animals helped</div>
+      </div>
+      <div class="impact__item">
+        <div class="impact__num" id="about-raised">$210k</div>
+        <div class="impact__label">Raised</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust & policies -->
+  <section class="container py-10">
+    <div class="card p-6">
+      <h2 class="text-xl font-extrabold mb-2">Trust & transparency</h2>
+      <ul class="list-disc pl-6 text-slate-700">
+        <li>Charity partners vetted across Alberta.</li>
+        <li>Payments via Stripe • PCI DSS Level 1.</li>
+        <li><a class="text-blue-700 underline" href="./privacy.html">Privacy policy</a> & <a class="text-blue-700 underline" href="../fund-a-paw/about.html#refunds">refunds</a>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="container py-10">
+    <div class="featured">
+      <img class="featured__img" src="../../static/fund-a-paw/img/hero.webp" alt="Volunteer caring for rescued animals" loading="lazy">
+      <div class="featured__body">
+        <h3 class="featured__title">Ready to make a difference?</h3>
+        <p class="featured__text">Support an urgent need or find a shelter close to you.</p>
+        <div class="flex gap-2">
+          <a class="btn btn-primary" href="../../templates/fund-a-paw/donate.html">Donate</a>
+          <a class="btn btn-ghost" href="../../templates/fund-a-paw/shelters.html#all">Browse shelters</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <footer id="site-footer" class="mt-16"></footer>
+
+  <script>
+    // Optional: hydrate counters from data.js if available
+    (function(){
+      if(!window.FAP) return;
+      const s = (FAP.shelters||[]).length || 53;
+      const a = (FAP.animals||[]).length || 1842;
+      document.getElementById('about-shelter-count').textContent = s;
+      document.getElementById('about-animals-helped').textContent = a;
+    })();
+  </script>
 </body>
 </html>

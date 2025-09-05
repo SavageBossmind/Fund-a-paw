@@ -572,3 +572,175 @@ FAP.initNewsletter = () => {
   });
 };
 
+// Urgent mini-grid on homepage
+(function () {
+  const el = document.getElementById('urgent-needs-minigrid');
+  if (!el || !window.FAP || !Array.isArray(FAP.animals)) return;
+
+  const inTemplates = /\/templates\/fund-a-paw\//.test(location.pathname);
+  const prefix = inTemplates ? '../../' : './';
+  const PAGES  = prefix + 'templates/fund-a-paw/';
+
+  // Take first 4 urgent animals (or fewer if not enough)
+  const urgent = FAP.animals.filter(a => a.urgent === true).slice(0, 4);
+
+  el.innerHTML = urgent.map(a => {
+    const img = a.image || (prefix + 'static/fund-a-paw/img/placeholder-pet.jpg');
+    const pct = Math.max(0, Math.min(100, Number(a.progress || 0)));
+
+    const id = a.id || a.slug || a.name; // best-effort id
+    const donateHref = `${PAGES}donate.html?animal=${encodeURIComponent(id)}`;
+
+    return `
+      <article class="u-card">
+        <div class="u-media">
+          <img src="${img}" alt="${a.name}" loading="lazy">
+        </div>
+        <div class="u-body">
+          <h3 class="u-title">${a.name}</h3>
+          <div class="u-shelter">${a.shelter?.name || a.shelterName || ''}</div>
+          <p class="u-desc">${(a.description || '').slice(0, 110)}${(a.description || '').length > 110 ? '…' : ''}</p>
+          ${pct ? `
+            <div class="u-progress" aria-hidden="true">
+              <span class="u-fill" style="width:${pct}%"></span>
+            </div>
+            <div class="u-pct">${pct}% funded</div>` : ''
+          }
+          <a class="btn btn-primary btn-sm btn-block"
+             href="${donateHref}"
+             data-animal-id="${id}">Help ${a.name}</a>
+        </div>
+      </article>
+    `;
+  }).join('');
+
+  // Optional: persist selection for donate page to read if you want
+  el.querySelectorAll('[data-animal-id]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-animal-id');
+      if (id) try { localStorage.setItem('selectedAnimalId', id); } catch (_) {}
+    });
+  });
+})();
+
+// Home: Urgent Shelter & Animal Needs mini-grid
+(function () {
+  const grid = document.querySelector('#urgent2 .urgent2__grid');
+  if (!grid || !window.FAP) return;
+
+  const inTemplates = /\/templates\/fund-a-paw\//.test(location.pathname);
+  const prefix = inTemplates ? '../../' : './';
+  const PAGES  = prefix + 'templates/fund-a-paw/';
+  const placeholder = prefix + 'static/fund-a-paw/img/placeholder-pet.jpg';
+
+  // URGENT animals
+  const urgentAnimals = (FAP.animals || [])
+    .filter(a => a.urgent === true)
+    .map(a => ({
+      kind: 'animal',
+      id: a.id || a.slug || a.name,
+      name: a.name,
+      shelter: a.shelter?.name || a.shelterName || '',
+      desc: a.description || '',
+      img: a.image || placeholder,
+      pct: Number(a.progress || 0)
+    }));
+
+  // URGENT shelter-level needs (best effort if available)
+  const urgentShelterNeeds = ((FAP.shelterNeeds) ? FAP.shelterNeeds : (FAP.shelters || [])
+    .flatMap(s => (s.urgentNeeds || []).map(n => ({
+      kind: 'shelter',
+      id: n.id || (s.id ? `${s.id}-${n.title}` : n.title),
+      name: n.title || 'Shelter need',
+      shelter: s.name || '',
+      desc: n.description || '',
+      img: n.image || s.image || placeholder,
+      pct: Number(n.progress || 0)
+    }))))
+    .filter(Boolean);
+
+  // choose up to 6 urgent items (animals first, then shelter needs)
+  const items = [...urgentAnimals, ...urgentShelterNeeds].slice(0, 6);
+
+  grid.innerHTML = items.map(x => {
+    const donateHref =
+      x.kind === 'animal'
+        ? `${PAGES}donate.html?animal=${encodeURIComponent(x.id)}`
+        : `${PAGES}donate.html?shelter=${encodeURIComponent(x.id)}`;
+    const desc = x.desc ? `${x.desc.slice(0, 110)}${x.desc.length > 110 ? '…' : ''}` : '';
+    const pct  = Math.max(0, Math.min(100, x.pct || 0));
+
+    return `
+      <article class="u-card">
+        <div class="u-media">
+          <img src="${x.img}" alt="${x.name}" loading="lazy" decoding="async" />
+        </div>
+        <div class="u-body">
+          <div class="u-eyebrow">${x.kind === 'animal' ? 'Animal' : 'Shelter'}</div>
+          <h3 class="u-title">${x.name}</h3>
+          <div class="u-shelter">${x.shelter || ''}</div>
+          ${desc ? `<p class="u-desc">${desc}</p>` : ''}
+
+          ${pct ? `
+            <div class="u-progress" aria-hidden="true">
+              <span class="u-fill" style="width:${pct}%"></span>
+            </div>
+            <div class="u-meta"><span>${pct}% funded</span></div>` : ''
+          }
+
+          <div class="u-cta">
+            <a class="btn btn-primary btn-sm btn-block" href="${donateHref}">Help ${x.name}</a>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join('');
+})();
+
+// Home: Impact strip numbers (live from data with safe fallbacks)
+(function () {
+  const mount = document.getElementById('impact-strip');
+  if (!mount) return;
+
+  const sheltersCount = (window.FAP?.shelters || []).length || 53;
+
+  // animals helped: prefer an explicit 'helped' flag; otherwise use total as a stand-in
+  const animalsHelped =
+    (window.FAP?.animals || []).filter(a => a.helped === true).length ||
+    (window.FAP?.animals || []).length || 1842;
+
+  // raised: try summing raised/funded fields if present; otherwise fallback
+  const raised = (() => {
+    let sum = 0;
+    try {
+      (window.FAP?.animals || []).forEach(a => sum += Number(a.raised ?? a.funded ?? 0));
+      (window.FAP?.shelterNeeds || []).forEach(n => sum += Number(n.raised ?? n.funded ?? 0));
+    } catch (e) {}
+    return sum || 210000; // $210k fallback
+  })();
+
+  const money = n => {
+    if (n >= 1_000_000) return `$${Math.round(n/1_000_000)}M`;
+    if (n >= 1_000)     return `$${Math.round(n/1_000)}k`;
+    return `$${n}`;
+  };
+
+  const fmt = n => n.toLocaleString();
+
+  mount.innerHTML = `
+    <div class="impact__grid" role="group" aria-label="Impact numbers">
+      <div class="impact__item">
+        <div class="impact__num" aria-label="${fmt(sheltersCount)} shelters">${fmt(sheltersCount)}</div>
+        <div class="impact__label">Shelters</div>
+      </div>
+      <div class="impact__item">
+        <div class="impact__num" aria-label="${fmt(animalsHelped)} animals helped">${fmt(animalsHelped)}</div>
+        <div class="impact__label">Animals helped</div>
+      </div>
+      <div class="impact__item">
+        <div class="impact__num" aria-label="${money(raised)} raised">${money(raised)}</div>
+        <div class="impact__label">Raised</div>
+      </div>
+    </div>
+  `;
+})();
