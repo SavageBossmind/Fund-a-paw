@@ -35,5 +35,80 @@
   </script>
 
   <footer id="site-footer" class="mt-16"></footer>
+
+
+  <!-- head -->
+<script src="https://js.stripe.com/v3/"></script>
+
+<!-- body (simplified) -->
+<main class="container mx-auto px-4">
+  <h1 class="text-3xl font-bold mb-2">Donate</h1>
+  <p class="text-slate-600 mb-6" id="donate-need-title"></p>
+
+  <form id="donate-form">
+    <label class="block mb-2">Amount (CAD)</label>
+    <input id="amount" type="number" min="100" step="100" value="2500" class="input" />
+
+    <label class="block mt-4 mb-2">Email (for receipt)</label>
+    <input id="email" type="email" class="input" placeholder="you@example.com" />
+
+    <div id="payment-element" class="mt-6"></div>
+
+    <button class="btn btn-primary mt-6" id="donate-submit">Donate</button>
+    <div id="donate-msg" class="mt-3 text-sm"></div>
+  </form>
+</main>
+
+<script>
+  const SERVER = "http://localhost:4242"; // update after deploy
+  const stripe = Stripe("pk_test_************************"); // your test publishable key
+
+  // Get needId from query string: donate.html?need=ehs-med-fund
+  const params = new URLSearchParams(location.search);
+  const needId = params.get('need') || 'ehs-med-fund';
+  document.getElementById('donate-need-title').textContent = `For: ${needId}`;
+
+  let elements;
+
+  async function mountElement() {
+    const { client_secret } = await fetch(`${SERVER}/api/donate/create-intent`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        needId,
+        amount_cents: Number(document.getElementById('amount').value),
+        email: document.getElementById('email').value || undefined
+      })
+    }).then(r => r.json());
+
+    elements = stripe.elements({ clientSecret: client_secret });
+    const paymentEl = elements.create('payment');
+    paymentEl.mount('#payment-element');
+  }
+
+  document.getElementById('donate-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    document.getElementById('donate-submit').disabled = true;
+    try {
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: { return_url: window.location.href }
+      });
+      if (error) {
+        document.getElementById('donate-msg').textContent = error.message;
+      } else {
+        document.getElementById('donate-msg').textContent = 'Processing…';
+      }
+    } finally {
+      document.getElementById('donate-submit').disabled = false;
+    }
+  });
+
+  // Create the intent and show Payment Element on load
+  mountElement();
+  // Recreate intent if amount changes
+  document.getElementById('amount').addEventListener('change', mountElement);
+</script>
+
 </body>
 </html>

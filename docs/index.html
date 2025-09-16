@@ -19,117 +19,121 @@
   <!-- Shared header (rendered by nav.js) -->
   <header id="site-nav"></header>
 
-  <!-- Hero -->
-  <header class="relative text-white">
-    <!-- FIX: use a relative path that works on Pages & locally -->
-    <img src="./static/fund-a-paw/img/hero.jpg" alt="Fund-a-Paw – supporting Alberta shelters"
-         class="absolute inset-0 w-full h-full object-cover hero__img"/>
-    <div class="absolute inset-0 bg-gradient-to-r from-blue-500/70 to-purple-500/60"></div>
-    <div class="relative py-20 px-4">
-      <div class="container mx-auto text-center">
-        <h1 class="text-4xl sm:text-5xl font-bold mb-4 tracking-tight">Fund-a-Paw</h1>
-        <p class="text-lg sm:text-xl font-light mb-8 max-w-2xl mx-auto">
-          Connecting caring people with animal shelters for transparent and direct support.
-        </p>
-        <a class="btn-primary inline-block"
-           href="./templates/fund-a-paw/shelters.html#all">
-           Find a Shelter to Support
-        </a>
 
-      </div>
+  
+
+<!-- ========================= HERO ========================= -->
+<!-- ========================= HERO ========================= -->
+<section class="hero" id="top">
+  <img class="hero__img"
+       src="./static/fund-a-paw/img/pet-dog.jpg"
+       alt="Volunteer comforting a rescued dog and cat">
+
+  <div class="hero__scrim" aria-hidden="true"></div>
+
+  <div class="container hero__content">
+    <h1 class="hero__title">Fund-a-Paw</h1>
+    <p class="hero__tag">
+      Connecting caring people with animal shelters for transparent and direct support.
+    </p>
+    <div class="hero__ctas">
+      <a class="btn btn-primary" href="./templates/fund-a-paw/shelters.html#all">Find a shelter</a>
+      <a class="btn btn-ghost"   href="./templates/fund-a-paw/donate.html">Donate</a>
     </div>
-  </header>
-
-  <!-- Impact strip -->
-<section class="impact-strip">
-  <div class="container" id="impact-strip"></div>
-</section>
-
-
-<!-- How it works -->
-<section id="how-it-works" class="container mx-auto px-4 mb-16">
-  <h2 class="text-3xl font-bold text-center mb-8">How it works</h2>
-  <div class="hiw">
-    <article class="hiw__card">
-      <div class="hiw__icon" aria-hidden="true">🔎</div>
-      <h3 class="hiw__title">Choose a need</h3>
-      <p class="hiw__text">Browse urgent animals and shelter needs across Alberta.</p>
-    </article>
-    <article class="hiw__card">
-      <div class="hiw__icon" aria-hidden="true">💳</div>
-      <h3 class="hiw__title">Donate securely</h3>
-      <p class="hiw__text">Fast, secure checkout with cards, Apple/Google Pay.</p>
-    </article>
-    <article class="hiw__card">
-      <div class="hiw__icon" aria-hidden="true">📬</div>
-      <h3 class="hiw__title">Get updates</h3>
-      <p class="hiw__text">See exactly how your gift helped with progress updates.</p>
-    </article>
   </div>
 </section>
 
-<!-- Featured urgent appeal -->
-<section id="featured" class="container mx-auto px-4 mb-16">
-  <h2 class="text-3xl font-bold text-center mb-6">Featured urgent appeal</h2>
-  <div id="featured-card"></div>
-</section>
 
 
-  <main class="py-20 px-4">
-    <!-- ===== Shelters list ===== -->
-  <!-- Urgent Shelter & Animal Needs -->
-<section class="urgent2" id="urgent2">
+<!-- ================== URGENT SHELTER & ANIMAL NEEDS ================== -->
+<section id="urgent" class="section reveal">
   <div class="container">
-    <div class="section-head">
-      <h2 class="text-2xl font-extrabold">Urgent Shelter & Animal Needs</h2>
-      <div class="flex items-center gap-2">
-        <a class="btn btn-outline btn-sm" href="./templates/fund-a-paw/shelters.html#urgent-shelter">Shelter needs</a>
-        <a class="btn btn-primary btn-sm" href="./templates/fund-a-paw/animals.html#urgent">Animal needs</a>
+    <div class="section__head">
+      <h2 class="h2">Urgent Shelter &amp; Animal Needs</h2>
+
+      <div class="segmented">
+        <button class="segmented__btn is-active" data-filter="shelter">Shelter needs</button>
+        <button class="segmented__btn" data-filter="animal">Animal needs</button>
       </div>
     </div>
-    <p class="text-slate-600 mb-3">Quick, high-impact opportunities to help today.</p>
 
-    <!-- Cards are injected by app.js -->
-    <div class="urgent2__grid" aria-live="polite"></div>
+    <!-- Cards will be injected here by app.js -->
+    <div id="urgent-cards" class="cards-grid"></div>
   </div>
 </section>
 
 
-  </main>
+  <!-- Shelter needs (default visible) -->
+  <div id="urgent-shelter-needs-grid" class="grid-auto"></div>
 
-  <section id="testimonials" class="container mx-auto px-4 mb-16">
+  <!-- Animal needs (toggled by the pills) -->
+  <div id="urgent-needs-grid" class="grid-auto" hidden></div>
+</section>
+
+<!-- HOW IT WORKS (replaces empty News for now) -->
+<section id="how-it-works" class="container mx-auto px-4 mb-16 reveal">
+  <h2 class="text-3xl font-bold text-center mb-8">How it works</h2>
+  <div class="hiw stagger">
+    <article class="hiw-card">
+      <div class="ico" aria-hidden="true">1</div>
+      <h3 class="font-extrabold">Choose a need</h3>
+      <p>Browse urgent animal and shelter needs across Alberta.</p>
+    </article>
+    <article class="hiw-card">
+      <div class="ico" aria-hidden="true">2</div>
+      <h3 class="font-extrabold">Donate securely</h3>
+      <p>Fast checkout with cards, Apple Pay or Google Pay via Stripe.</p>
+    </article>
+    <article class="hiw-card">
+      <div class="ico" aria-hidden="true">3</div>
+      <h3 class="font-extrabold">Get updates</h3>
+      <p>See exactly how your gift helped with progress photos &amp; notes.</p>
+    </article>
+  </div>
+</section>
+
+<!-- FEATURED ANIMALS (always 3; mobile swipe enabled) -->
+<section id="featured-animals" class="container mx-auto px-4 mb-16 reveal">
+  <div class="section-head">
+    <h2 class="text-3xl font-bold">Featured animals</h2>
+    <a class="btn btn-outline btn-sm" href="./templates/fund-a-paw/animals.html#all">View all</a>
+  </div>
+  <div id="fa-grid" class="grid-auto"></div>
+  <!-- mobile dots are injected by JS -->
+</section>
+
+<!-- TESTIMONIALS (kept, with subtle reveal) -->
+<section id="testimonials" class="container mx-auto px-4 mb-16 reveal">
   <h2 class="text-3xl font-bold text-center mb-8">What people say</h2>
-  <div class="t-grid">
-    <blockquote class="t-card">
-      <p>“Our shelter funded Buddy’s surgery in days. The updates kept donors engaged.”</p>
-      <footer>— Alberta Animal Rescue Foundation</footer>
-    </blockquote>
-    <blockquote class="t-card">
-      <p>“I donated in two clicks with Apple Pay and received a photo the next week.”</p>
-      <footer>— Mia, donor</footer>
-    </blockquote>
-    <blockquote class="t-card">
-      <p>“This platform turns compassion into measurable impact for animals.”</p>
-      <footer>— Edmonton Humane volunteer</footer>
-    </blockquote>
+  <div class="t-grid stagger">
+    <blockquote class="t-card"><p>“Our shelter funded Buddy’s surgery in days. The updates kept donors engaged.”</p><footer>— Alberta Animal Rescue Foundation</footer></blockquote>
+    <blockquote class="t-card"><p>“I donated in two clicks with Apple Pay and received a photo the next week.”</p><footer>— Mia, donor</footer></blockquote>
+    <blockquote class="t-card"><p>“This platform turns compassion into measurable impact for animals.”</p><footer>— Edmonton Humane volunteer</footer></blockquote>
   </div>
 </section>
 
-
-  <!-- Partners carousel (the automatic one you wanted) -->
-  <section id="partners" class="partners" aria-label="Our Partners">
-    <div class="partners__head">
-      <h2 class="partners__title">Our Partners</h2>
-      <p class="partners__subtitle">Shelters across Alberta we collaborate with</p>
-    </div>
-    <div class="partners__carousel" id="partners-carousel">
-      <button class="partners__control partners__control--prev" id="partners-prev" aria-label="Previous partners" type="button">‹</button>
-      <div class="partners__viewport" id="partners-viewport">
-        <ul class="partners__track" id="partners-track" role="list"></ul>
+<!-- PARTNERS — endless marquee (3 visible, no arrows) -->
+<section class="partners partners--pro reveal" id="partners">
+  <div class="container">
+    <h2 class="partners__title">Our Partners</h2>
+    <p class="partners__subtitle">Shelters across Alberta we collaborate with</p>
+    <div class="p-carousel" aria-label="Shelter partners">
+      <div class="p-viewport">
+        <ul class="p-track" id="partnersTrack"></ul>
       </div>
-      <button class="partners__control partners__control--next" id="partners-next" aria-label="Next partners" type="button">›</button>
     </div>
-  </section>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<section class="container mx-auto px-4 mb-12 reveal">
+  <p class="text-center text-slate-500">
+    Payments processed by Stripe · PCI DSS Level 1 ·
+    <a href="./templates/fund-a-paw/about.html#privacy">Privacy</a> ·
+    <a href="./templates/fund-a-paw/about.html#refunds">Refund policy</a>
+  </p>
+</section>
+
 
   <!-- Shared footer (rendered by footer.js) -->
   <footer id="site-footer" class="mt-12"></footer>

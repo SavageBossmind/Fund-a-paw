@@ -1,16 +1,18 @@
-// docs/static/fund-a-paw/js/nav.js
+/* nav.js — sticky, responsive header with working relative links */
 (function () {
-  const mount = document.getElementById('site-nav');
-  if (!mount) return;
+  'use strict';
 
+  // Detect where we are (root vs /templates/)
   const inTemplates = /\/templates\/fund-a-paw\//.test(location.pathname);
   const prefix = inTemplates ? '../../' : './';
   const PAGES  = prefix + 'templates/fund-a-paw/';
 
   const PATHS = {
     home:           prefix + 'index.html',
-    shelters:       PAGES + 'shelters.html#all',
-    urgentShelter:  PAGES + 'shelters.html#urgent-shelter',
+    animalsAll:     PAGES + 'animals.html#all',
+    animalsUrgent:  PAGES + 'animals.html#urgent',
+    sheltersAll:    PAGES + 'shelters.html#all',
+    sheltersUrgent: PAGES + 'shelters.html#urgent-shelter',
     urgentAnimals:  PAGES + 'animals.html#urgent',
     partners:       PAGES + 'partners.html',
     contact:        PAGES + 'contact.html',
@@ -18,138 +20,132 @@
     donate:         PAGES + 'donate.html',
   };
 
-  mount.innerHTML = `
-    <div class="fap-nav fap-sticky" role="banner">
-      <div class="fap-nav__inner">
-        <a class="fap-brand" href="${PATHS.home}">Fund-a-Paw</a>
+  // Create or reuse the header host
+  const host =
+    document.getElementById('site-nav') ||
+    document.getElementById('fap-nav')  ||
+    (() => {
+      const h = document.createElement('header');
+      h.id = 'site-nav';
+      document.body.prepend(h);
+      return h;
+    })();
 
-        <!-- Desktop menu -->
-        <nav class="fap-menu" aria-label="Primary">
-          <ul class="fap-menu__list">
-            <li class="has-submenu">
-              <a href="${PATHS.shelters}" class="fap-link">Shelters</a>
-              <div class="submenu" role="menu">
-                <a class="fap-dropdown__item" href="${PATHS.urgentShelter}" role="menuitem">Urgent shelter needs</a>
-                <a class="fap-dropdown__item" href="${PATHS.urgentAnimals}" role="menuitem">Urgent animal needs</a>
-              </div>
-            </li>
-            <li><a class="fap-link" href="${PATHS.partners}">Our Partners</a></li>
-            <li><a class="fap-link" href="${PATHS.contact}">Contact</a></li>
-            <li><a class="fap-link" href="${PATHS.about}">About Us</a></li>
-          </ul>
-        </nav>
+  host.className = 'site-header';
 
-        <!-- Desktop CTAs (hidden on mobile via CSS) -->
-        <div class="fap-ctas">
-          <a class="btn btn-ghost"  href="${PATHS.shelters}">Find a Shelter</a>
-          <a class="btn btn-urgent" href="${PATHS.urgentAnimals}">Urgent Needs</a>
-          <a class="btn btn-primary" href="${PATHS.donate}">Donate</a>
-        </div>
+  host.innerHTML = `
+  <div class="nav-wrap container">
+    <a class="brand" href="${PATHS.home}" aria-label="Fund-a-Paw, home">
+      <span>Fund-a-</span><strong>Paw</strong>
+    </a>
 
-        <!-- Burger (visible on mobile) -->
-        <button class="fap-burger" id="fap-burger" aria-label="Open menu" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
+    <button class="burger" id="nav-burger" aria-label="Open menu" aria-controls="nav-drawer" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
 
-      <!-- Mobile drawer -->
-      <nav class="fap-mobile" id="fap-mobile" aria-label="Mobile">
-        <a class="fap-link" href="${PATHS.shelters}">Shelters</a>
-        <a class="fap-link" href="${PATHS.urgentShelter}">Urgent shelter needs</a>
-        <a class="fap-link" href="${PATHS.urgentAnimals}">Urgent animal needs</a>
-        <a class="fap-link" href="${PATHS.partners}">Our Partners</a>
-        <a class="fap-link" href="${PATHS.contact}">Contact</a>
-        <a class="fap-link" href="${PATHS.about}">About Us</a>
-        <div class="mt-3 grid gap-2">
-          <a class="btn btn-ghost w-full"  href="${PATHS.shelters}">Find a Shelter</a>
-          <a class="btn btn-urgent w-full" href="${PATHS.urgentAnimals}">Urgent Needs</a>
-          <a class="btn btn-primary w-full" href="${PATHS.donate}">Donate</a>
-        </div>
-      </nav>
+    <nav class="menu" aria-label="Primary">
+      <ul class="menu__list">
+        <li class="has-submenu">
+          <a class="menu__link" href="${PATHS.animalsAll}">Animals</a>
+          <div class="dropdown" role="menu">
+            <a class="dropdown__item" href="${PATHS.animalsUrgent}" role="menuitem">Urgent animals</a>
+            <a class="dropdown__item" href="${PATHS.animalsAll}" role="menuitem">All animals</a>
+          </div>
+        </li>
+
+        <li class="has-submenu">
+          <a class="menu__link" href="${PATHS.sheltersAll}">Shelters</a>
+          <div class="dropdown" role="menu">
+            <a class="dropdown__item" href="${PATHS.sheltersUrgent}" role="menuitem">Urgent shelter needs</a>
+            <a class="dropdown__item" href="${PATHS.urgentAnimals}" role="menuitem">Urgent animal needs</a>
+          </div>
+        </li>
+
+        <li><a class="menu__link" href="${PATHS.partners}">Our Partners</a></li>
+        <li><a class="menu__link" href="${PATHS.contact}">Contact</a></li>
+        <li><a class="menu__link" href="${PATHS.about}">About Us</a></li>
+      </ul>
+    </nav>
+
+    <div class="menu-ctas">
+      <a class="btn-ghost"  href="${PATHS.sheltersAll}">Find a Shelter</a>
+      <a class="btn-danger" href="${PATHS.animalsUrgent}">Urgent Needs</a>
+      <a class="btn-primary" href="${PATHS.donate}">Donate</a>
     </div>
+  </div>
+
+  <!-- Mobile drawer -->
+  <nav class="drawer" id="nav-drawer" aria-label="Mobile">
+    <a class="drawer__link" href="${PATHS.animalsAll}">Animals</a>
+    <a class="drawer__link" href="${PATHS.animalsUrgent}">Urgent animals</a>
+
+    <a class="drawer__link" href="${PATHS.sheltersAll}">Shelters</a>
+    <a class="drawer__link" href="${PATHS.sheltersUrgent}">Urgent shelter needs</a>
+    <a class="drawer__link" href="${PATHS.urgentAnimals}">Urgent animal needs</a>
+
+    <a class="drawer__link" href="${PATHS.partners}">Our Partners</a>
+    <a class="drawer__link" href="${PATHS.contact}">Contact</a>
+    <a class="drawer__link" href="${PATHS.about}">About Us</a>
+    <hr/>
+    <a class="btn-primary block" href="${PATHS.donate}">Donate</a>
+  </nav>
   `;
 
-  // ---- Fixed header offset + shadow
-  const nav = document.querySelector('.fap-sticky');
-  const setPad = () => {
-    if (!nav) return;
-    document.body.classList.add('has-fixed-nav');
-    document.documentElement.style.setProperty('--nav-h', `${nav.offsetHeight}px`);
+  // --- Mobile burger ---
+  const burger = document.getElementById('nav-burger');
+  const drawer = document.getElementById('nav-drawer');
+  const toggleDrawer = () => {
+    const open = burger.getAttribute('aria-expanded') === 'true';
+    burger.setAttribute('aria-expanded', String(!open));
+    document.body.classList.toggle('nav-open', !open);
   };
-  setPad();
-  window.addEventListener('resize', setPad);
-
-  const setShadow = () => nav?.classList.toggle('is-scrolled', window.scrollY > 8);
-  setShadow();
-  window.addEventListener('scroll', setShadow, { passive: true });
-
-  // ---- Mobile drawer + overlay (overlay does NOT cover the header)
-  const burger = document.getElementById('fap-burger');
-  const drawer = document.getElementById('fap-mobile');
-
-  if (burger && drawer) {
-    let overlay = document.getElementById('fap-overlay');
-    if (!overlay) {
-      overlay = document.createElement('div');
-      overlay.id = 'fap-overlay';
-      overlay.className = 'fap-overlay';
-      document.body.appendChild(overlay);
-    }
-
-    const openDrawer = () => {
-      drawer.classList.add('open');
-      overlay.classList.add('show');     // overlay shows under header
-      burger.setAttribute('aria-expanded', 'true');
-      document.body.classList.add('no-scroll');
-    };
-    const closeDrawer = () => {
-      drawer.classList.remove('open');
-      overlay.classList.remove('show');
+  burger.addEventListener('click', toggleDrawer);
+  drawer.addEventListener('click', (e) => {
+    if (e.target.closest('a')) {
       burger.setAttribute('aria-expanded', 'false');
-      document.body.classList.remove('no-scroll');
-    };
-    const toggleDrawer = () =>
-      drawer.classList.contains('open') ? closeDrawer() : openDrawer();
-
-    burger.addEventListener('click', toggleDrawer);
-    overlay.addEventListener('click', closeDrawer);
-    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
-    drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setTimeout(closeDrawer, 0)));
-    window.addEventListener('hashchange', closeDrawer);
-  }
-
-  // ---- Floating Donate FAB (hide on donate page)
-  const mountDonateFab = () => {
-    if (/donate\.html/i.test(location.pathname + location.hash)) {
-      document.getElementById('donate-fab')?.remove();
-      return;
+      document.body.classList.remove('nav-open');
     }
-    if (document.getElementById('donate-fab')) return;
-    const a = document.createElement('a');
-    a.id = 'donate-fab';
-    a.className = 'donate-fab';
-    a.href = PATHS.donate;
-    a.innerHTML = `
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/>
-      </svg>
-      <span>Donate</span>`;
-    document.body.appendChild(a);
-  };
-  mountDonateFab();
-  window.addEventListener('hashchange', mountDonateFab);
+  });
 
+  // --- Sticky shadow on scroll ---
+  const onScroll = () => {
+    if (window.scrollY > 6) host.classList.add('is-stuck');
+    else host.classList.remove('is-stuck');
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // --- Close any open dropdown when clicking outside (desktop) ---
+  document.addEventListener('click', (e) => {
+    const open = document.querySelector('.has-submenu.open');
+    if (!open) return;
+    if (!open.contains(e.target)) open.classList.remove('open');
+  });
+
+  // Keyboard access for dropdowns
+  host.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const open = document.querySelector('.has-submenu.open');
+    if (open) open.classList.remove('open');
+  });
+
+  // Open dropdown via focus (for keyboard users)
+  host.addEventListener('focusin', (e) => {
+    const li = e.target.closest('.has-submenu');
+    if (li) li.classList.add('open');
+  });
+  host.addEventListener('focusout', (e) => {
+    const li = e.target.closest('.has-submenu');
+    if (li) setTimeout(() => li.classList.remove('open'), 0);
+  });
 })();
 
-// Ensure the nav height is measured and used for offsets (drawer/overlay)
-const nav = document.querySelector('.fap-sticky');
-if (nav) {
-  const setPad = () => {
-    document.body.classList.add('has-fixed-nav');
-    document.documentElement.style.setProperty('--nav-h', `${nav.offsetHeight}px`);
-  };
-  setPad();
-  window.addEventListener('resize', setPad);
-}
 
+window.FAP = window.FAP || {};
+FAP.partners = [
+  { name:'Edmonton Humane Society', image:'./static/fund-a-paw/img/ehs.png', url:'https://www.edmontonhumanesociety.com/' },
+  { name:'Second Chance Animal Rescue', image:'./static/fund-a-paw/img/scars.webp', url:'https://scarscare.ca/' },
+  { name:'Calgary SPCA', image:'./static/fund-a-paw/img/calgary-spca.webp', url:'https://www.calgaryhumane.ca/' },
+  { name:'Central Alberta Humane Society', image:'./static/fund-a-paw/img/cahs.jpg', url:'#' },
+  { name:'AARF', image:'./static/fund-a-paw/img/aarf.webp', url:'#' }
+];

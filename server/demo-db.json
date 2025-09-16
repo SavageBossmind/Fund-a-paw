@@ -1,0 +1,27 @@
+{
+  "shelters": [
+    { "id": "aarf", "name": "Alberta Animal Rescue Foundation", "stripe_account_id": "" },
+    { "id": "ehs",  "name": "Edmonton Humane Society",         "stripe_account_id": "acct_xxx_test_optional" }
+  ],
+  "needs": [
+    {
+      "id": "ehs-med-fund",
+      "shelter_id": "ehs",
+      "title": "Emergency medical fund top-up",
+      "goal_cents": 300000,
+      "raised_cents": 175000,
+      "image": "/static/fund-a-paw/img/needs/ehs-med.webp",
+      "deadline": "2025-11-30"
+    },
+    {
+      "id": "aarf-food-sept",
+      "shelter_id": "aarf",
+      "title": "High-protein food for new intakes (Sept)",
+      "goal_cents": 120000,
+      "raised_cents": 32000,
+      "image": "/static/fund-a-paw/img/needs/aarf-food.webp",
+      "deadline": "2025-09-30"
+    }
+  ],
+  "donations": []
+}
